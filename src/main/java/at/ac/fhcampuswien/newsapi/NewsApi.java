@@ -114,7 +114,7 @@ public class NewsApi {
         this.endpoint = endpoint;
     }
 
-    protected String requestData() {
+    protected String requestData() throws NewsApiException{
         String url = buildURL();
         System.out.println("URL: " + url);
         URL obj = null;
@@ -122,7 +122,8 @@ public class NewsApi {
             obj = new URL(url);
         } catch (MalformedURLException e) {
             // TODO improve ErrorHandling
-            e.printStackTrace();
+            throw new NewsApiException("malformed URL: " + url, e);
+           // e.printStackTrace();
         }
         HttpURLConnection con;
         StringBuilder response = new StringBuilder();
@@ -135,14 +136,26 @@ public class NewsApi {
             }
             in.close();
         } catch (IOException e) {
+            throw new NewsApiException("Could not read from connection: " +e.getMessage());
             // TODO improve ErrorHandling
-            System.out.println("Error "+e.getMessage());
+           // System.out.println("Error "+e.getMessage());
         }
         return response.toString();
     }
 
-    protected String buildURL() {
+    protected String buildURL() throws NewsApiException {
         // TODO ErrorHandling
+
+        if(getEndpoint() == null){
+            throw new NewsApiException("Endpoint can not be null");
+        }
+        if(getQ()== null){
+            throw new NewsApiException("q can not be null");
+        }
+        if(getApiKey() == null){
+            throw new NewsApiException("API-key can not be null");
+        }
+
         String urlbase = String.format(NEWS_API_URL,getEndpoint().getValue(),getQ(),getApiKey());
         StringBuilder sb = new StringBuilder(urlbase);
 
@@ -186,7 +199,16 @@ public class NewsApi {
 
     public NewsResponse getNews() {
         NewsResponse newsReponse = null;
-        String jsonResponse = requestData();
+        String jsonResponse = null;
+               try{
+                  jsonResponse= requestData();
+        }
+               catch (NewsApiException e){
+                   System.out.println("Error:" + e.getMessage());
+                  if( e.getCause() != null){
+                      System.out.println("cause: " +e.getCause().getMessage());
+                  }
+               }
         if(jsonResponse != null && !jsonResponse.isEmpty()){
 
             ObjectMapper objectMapper = new ObjectMapper();
