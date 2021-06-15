@@ -22,7 +22,15 @@ public class NewsAPIExample {
                 .setSourceCategory(Category.health) // example of how to use enums
                 .createNewsApi();
 
-            NewsResponse newsResponse = newsApi.getNews();
+            NewsResponse newsResponse = null;
+        try {
+            newsResponse = newsApi.getNews();
+        } catch (NewsApiException e) {
+            System.out.println("Error:" + e.getMessage());
+            if (e.getCause() != null) {
+                System.out.println("cause: " + e.getCause().getMessage());
+            }
+
             if(newsResponse != null){
                 List<Article> articles = newsResponse.getArticles();
                 articles.stream().forEach(article -> System.out.println(article.toString()));
@@ -36,7 +44,14 @@ public class NewsAPIExample {
                 .setExcludeDomains("Lifehacker.com")
                 .createNewsApi();
 
-            newsResponse = newsApi.getNews();
+            NewsResponse newsResponse2 = null;
+            try {
+                newsResponse2 = newsApi.getNews();
+            } catch (NewsApiException f) {
+                System.out.println("Error:" + f.getMessage());
+                if (e.getCause() != null) {
+                    System.out.println("cause: " + f.getCause().getMessage());
+                }
 
         if(newsResponse != null){
             List<Article> articles = newsResponse.getArticles();
@@ -44,4 +59,4 @@ public class NewsAPIExample {
         }
 
     }
-}
+}}}

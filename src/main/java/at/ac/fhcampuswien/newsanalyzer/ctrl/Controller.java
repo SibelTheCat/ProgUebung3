@@ -18,13 +18,6 @@ public class Controller {
 
 	public void process(NewsApi newsApi) {
 		System.out.println("Start process");
-		/*NewsApi newsApi = new NewsApiBuilder()
-				.setApiKey(APIKEY)
-				.setQ("corona")
-				.setEndPoint(Endpoint.TOP_HEADLINES)// example of how to use enums
-				.setSourceCountry(Country.at)       // example of how to use enums
-				.setSourceCategory(Category.health) // example of how to use enums
-				.createNewsApi();*/
 
 		NewsResponse newsResponse = (NewsResponse) getData(newsApi);
 
@@ -41,8 +34,15 @@ public class Controller {
 		System.out.println("End process");
 	}
 	public Object getData(NewsApi newsApi) {
-		NewsResponse newsResponse = newsApi.getNews();
-
+		NewsResponse newsResponse = null;
+		try {
+			 newsResponse = newsApi.getNews();
+		} catch (NewsApiException e) {
+			System.out.println("Error:" + e.getMessage());
+			if (e.getCause() != null) {
+				System.out.println("cause: " + e.getCause().getMessage());
+			}
+		}
 		return newsResponse;
 	}
 		//#a number of articles

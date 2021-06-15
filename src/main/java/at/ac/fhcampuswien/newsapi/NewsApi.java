@@ -197,18 +197,10 @@ public class NewsApi {
         return sb.toString();
     }
 
-    public NewsResponse getNews() {
+    public NewsResponse getNews() throws NewsApiException{
         NewsResponse newsReponse = null;
-        String jsonResponse = null;
-               try{
-                  jsonResponse= requestData();
-        }
-               catch (NewsApiException e){
-                   System.out.println("Error:" + e.getMessage());
-                  if( e.getCause() != null){
-                      System.out.println("cause: " +e.getCause().getMessage());
-                  }
-               }
+        String jsonResponse = requestData();
+
         if(jsonResponse != null && !jsonResponse.isEmpty()){
 
             ObjectMapper objectMapper = new ObjectMapper();
@@ -218,7 +210,8 @@ public class NewsApi {
                     System.out.println("Error: "+newsReponse.getStatus());
                 }
             } catch (JsonProcessingException e) {
-                System.out.println("Error: "+e.getMessage());
+                throw new NewsApiException("problem with Json: " +e.getMessage());
+
             }
         }
         //TODO improve Errorhandling
