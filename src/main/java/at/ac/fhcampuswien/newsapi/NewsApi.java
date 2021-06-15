@@ -136,15 +136,15 @@ public class NewsApi {
             }
             in.close();
         } catch (IOException e) {
-            throw new NewsApiException("Could not read from connection: " +e.getMessage());
-            // TODO improve ErrorHandling
+            throw new NewsApiException("Could not read from connection: " +e.getMessage(), e);
+            // TODO improve ErrorHandling - check
            // System.out.println("Error "+e.getMessage());
         }
         return response.toString();
     }
 
     protected String buildURL() throws NewsApiException {
-        // TODO ErrorHandling
+        // TODO ErrorHandling- check
 
         if(getEndpoint() == null){
             throw new NewsApiException("Endpoint can not be null");
@@ -210,11 +210,11 @@ public class NewsApi {
                     System.out.println("Error: "+newsReponse.getStatus());
                 }
             } catch (JsonProcessingException e) {
-                throw new NewsApiException("problem with Json: " +e.getMessage());
+                throw new NewsApiException("problem with Json: " +e.getMessage(), e);
 
             }
         }
-        //TODO improve Errorhandling
+        //TODO improve Errorhandling- check
         return newsReponse;
     }
 }
